@@ -19,6 +19,30 @@
   canvas {
     display: block;
   }
+  
+  /* 戻るリンク用のスタイル */
+  #back-link {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 3000;
+    background: rgba(255, 255, 255, 0.7);
+    color: #1a1a1a;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: 'Courier New', monospace, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background 0.2s;
+  }
+  #back-link:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 1);
+  }
+
   .face {
     position: fixed;
     top: 50%;
@@ -67,9 +91,11 @@
 </style>
 </head>
 <body>
+<a href="https://megakirara.github.io/-KINOKO/" id="back-link">( 👁️ _ 👁️ )戻る❓</a>
+
 <canvas id="sky"></canvas>
 <div class="face" id="face1">（^ ω^）</div>
-<div class="face" id="face2">(　ﾟ　Д　ﾟ 　)</div>
+<div class="face" id="face2">( ﾟ Д ﾟ  )</div>
 <div class="celebration" id="celebration"></div>
 
 <script>
@@ -203,7 +229,7 @@ function celebrate(level = 1) {
   
   const celebDiv = document.getElementById('celebration');
   celebDiv.innerHTML = '';
-  const faces = ['（^ ω^）', '(　ﾟ　Д　ﾟ 　)'];
+  const faces = ['（^ ω^）', '( ﾟ Д ﾟ  )'];
   
   // 画面いっぱいに顔文字を敷き詰める
   const rows = Math.ceil(window.innerHeight / 50);
@@ -260,6 +286,9 @@ function playBeep(frequency = 800, duration = 0.1) {
 
 // クリック・タッチ判定（当たり判定拡大 + 彼岸花クリック判定）
 function handleInteraction(e) {
+  // 戻るリンクをクリックしたときはイベントを阻害しない
+  if (e.target.id === 'back-link') return;
+
   e.preventDefault();
   const mx = (e.touches ? e.touches[0].clientX : e.clientX);
   const my = (e.touches ? e.touches[0].clientY : e.clientY);
