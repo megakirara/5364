@@ -2,22 +2,22 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>彼岸花とゴミ虫</title>
+<title>彼岸花とゴミ虫 ✧ Neon Edition ✧</title>
 <style>
   body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(270deg, #ffd6e0, #ffe0f7, #d6f0ff, #e0ffe8, #fff0d6);
-    background-size: 1200% 1200%;
-    animation: gradientShift 30s ease infinite;
-  }
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: #070720;
+    -webkit-user-select: none;
+    user-select: none;
   }
   canvas {
     display: block;
+  }
+  
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
   }
   
   #back-link {
@@ -25,21 +25,23 @@
     top: 15px;
     right: 15px;
     z-index: 3000;
-    background: rgba(255, 255, 255, 0.7);
-    color: #1a1a1a;
+    background: rgba(255, 122, 217, 0.25);
+    color: #4de1ff;
     text-decoration: none;
     padding: 8px 16px;
     border-radius: 20px;
     font-family: 'Courier New', monospace, sans-serif;
     font-weight: bold;
     font-size: 14px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 0 12px #ff7ad9, inset 0 0 8px #ff7ad9;
+    border: 1px solid #4de1ff;
+    text-shadow: 0 0 8px #4de1ff;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
   }
   #back-link:hover {
     transform: scale(1.05);
-    background: rgba(255, 255, 255, 1);
+    background: rgba(255, 122, 217, 0.45);
+    box-shadow: 0 0 22px #ff7ad9, 0 0 12px #4de1ff;
   }
 
   .face {
@@ -49,8 +51,8 @@
     transform: translate(-50%, -50%);
     font-size: 80px;
     font-weight: bold;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    text-shadow: 0 0 20px #ff7ad9, 0 0 40px #4de1ff;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -67,8 +69,8 @@
     align-items: center;
     font-size: 40px;
     font-weight: bold;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+    color: #ffffff;
+    text-shadow: 0 0 15px #ffe84a, 0 0 30px #ff7ad9;
     pointer-events: none;
     z-index: 1000;
     animation: fadeInOut 3s ease;
@@ -78,19 +80,17 @@
     10%, 90% { opacity: 1; }
   }
   @keyframes rainbowBlink {
-    0% { color: #ffb3ba; text-shadow: 0 0 15px #ffb3ba; }
-    14% { color: #ffd4a3; text-shadow: 0 0 15px #ffd4a3; }
-    28% { color: #ffffba; text-shadow: 0 0 15px #ffffba; }
-    42% { color: #baffc9; text-shadow: 0 0 15px #baffc9; }
-    57% { color: #bae1ff; text-shadow: 0 0 15px #bae1ff; }
-    71% { color: #d4baff; text-shadow: 0 0 15px #d4baff; }
-    85% { color: #ffbaee; text-shadow: 0 0 15px #ffbaee; }
-    100% { color: #ffb3ba; text-shadow: 0 0 15px #ffb3ba; }
+    0% { color: #ff7ad9; text-shadow: 0 0 15px #ff7ad9, 0 0 30px #ff7ad9; }
+    20% { color: #ffe84a; text-shadow: 0 0 15px #ffe84a, 0 0 30px #ffe84a; }
+    40% { color: #b6ff5c; text-shadow: 0 0 15px #b6ff5c, 0 0 30px #b6ff5c; }
+    60% { color: #4de1ff; text-shadow: 0 0 15px #4de1ff, 0 0 30px #4de1ff; }
+    80% { color: #b68cff; text-shadow: 0 0 15px #b68cff, 0 0 30px #b68cff; }
+    100% { color: #ff7ad9; text-shadow: 0 0 15px #ff7ad9, 0 0 30px #ff7ad9; }
   }
 </style>
 </head>
 <body>
-<a href="https://megakirara.github.io/-KINOKO/baiyo.html" id="back-link">( 👁️ _ 👁️ )戻る❓</a>
+<a href="https://megakirara.github.io/-KINOKO/game.html" id="back-link">( 👁️ _ 👁️ )戻る❓</a>
 
 <canvas id="sky"></canvas>
 <div class="face" id="face1">（^ ω^）</div>
@@ -98,6 +98,18 @@
 <div class="celebration" id="celebration"></div>
 
 <script>
+"use strict";
+
+document.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+});
+
+document.addEventListener("dragstart", (e) => {
+  if (e.target.tagName === "IMG") {
+    e.preventDefault();
+  }
+});
+
 const canvas = document.getElementById("sky");
 const ctx = canvas.getContext("2d");
 let w, h;
@@ -113,16 +125,18 @@ let bugClickCount = 0;
 let celebrating = false;
 
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-const bugCount = isMobile ? 500 : 1000;
-const rainbowColors = [
-  "#c7d0ff", "#f7c7ff", "#ffd6e0", "#fff0d6", "#e0ffe8", "#d6f0ff"
+const bugCount = isMobile ? 300 : 700;
+
+// ネオンカラーの虫（ゴミ虫）パレット
+const neonBugColors = [
+  "#ff7ad9", "#ffe84a", "#4de1ff", "#b6ff5c", "#b68cff", "#ff36bd", "#00eaff"
 ];
 const bugs = Array.from({ length: bugCount }, () => ({
   x: Math.random() * w,
   y: Math.random() * h,
-  r: Math.random() * 2 + 1.5,
+  r: Math.random() * 2.2 + 1.2,
   speed: Math.random() * 0.6 + 0.2,
-  color: rainbowColors[Math.floor(Math.random() * rainbowColors.length)],
+  color: neonBugColors[Math.floor(Math.random() * neonBugColors.length)],
   phase: Math.random() * Math.PI * 2
 }));
 
@@ -130,48 +144,46 @@ let lilyClickCount = 0;
 let rainbowOffset = 0;
 let lilySize = 1.0;
 let lilyRainbowMode = false;
-const lilyColors = [
-  { color: "rgba(255,0,0,0.75)", shadow: "rgba(255,60,60,0.9)" },     
-  { color: "rgba(100,200,255,0.75)", shadow: "rgba(100,200,255,0.9)" }, 
-  { color: "rgba(255,220,100,0.75)", shadow: "rgba(255,220,100,0.9)" }, 
-  { color: "rgba(200,150,255,0.75)", shadow: "rgba(200,150,255,0.9)" },
-  { color: "rgba(255,150,80,0.75)", shadow: "rgba(255,150,80,0.9)" }, 
-  { color: "rgba(100,255,150,0.75)", shadow: "rgba(100,255,150,0.9)" } 
+
+// ネオン彼岸花のカラーパレット
+const lilyNeonColors = [
+  { color: "rgba(255,122,217,0.85)", shadow: "rgba(255,122,217,1)" },      
+  { color: "rgba(77,225,255,0.85)", shadow: "rgba(77,225,255,1)" },  
+  { color: "rgba(255,232,74,0.85)", shadow: "rgba(255,232,74,1)" },  
+  { color: "rgba(182,140,255,0.85)", shadow: "rgba(182,140,255,1)" },
+  { color: "rgba(255,54,189,0.85)", shadow: "rgba(255,54,189,1)" },  
+  { color: "rgba(182,255,92,0.85)", shadow: "rgba(182,255,92,1)" }  
 ];
 
-const paleRainbow = [
-  "rgba(255,179,186,0.75)", 
-  "rgba(255,212,163,0.75)", 
-  "rgba(255,255,186,0.75)",
-  "rgba(186,255,201,0.75)",
-  "rgba(186,225,255,0.75)",
-  "rgba(212,186,255,0.75)",
-  "rgba(255,186,238,0.75)"
+const neonRainbow = [
+  "rgba(255,122,217,0.85)", 
+  "rgba(255,232,74,0.85)", 
+  "rgba(182,255,92,0.85)",
+  "rgba(77,225,255,0.85)",
+  "rgba(0,234,255,0.85)",
+  "rgba(182,140,255,0.85)",
+  "rgba(255,54,189,0.85)"
 ];
 
 function getCurrentLilyColor(petalIndex) {
   if (lilyRainbowMode) {
-    return paleRainbow[(petalIndex + rainbowOffset) % paleRainbow.length];
+    return neonRainbow[(petalIndex + rainbowOffset) % neonRainbow.length];
   }
   
   if (lilyClickCount > 100) {
-    const rainbowPalette = [
-      "rgba(255,0,0,0.75)", "rgba(255,127,0,0.75)", "rgba(255,255,0,0.75)",
-      "rgba(0,255,0,0.75)", "rgba(0,127,255,0.75)", "rgba(0,0,255,0.75)", "rgba(139,0,255,0.75)"
-    ];
-    return rainbowPalette[(petalIndex + rainbowOffset) % rainbowPalette.length];
+    return neonRainbow[(petalIndex + rainbowOffset) % neonRainbow.length];
   } else {
-    const colorIndex = Math.floor(lilyClickCount / 15) % lilyColors.length;
-    return lilyColors[colorIndex].color;
+    const colorIndex = Math.floor(lilyClickCount / 15) % lilyNeonColors.length;
+    return lilyNeonColors[colorIndex].color;
   }
 }
 
 function getCurrentLilyShadow() {
   if (lilyRainbowMode || lilyClickCount > 100) {
-    return "rgba(255,255,255,0.9)";
+    return "rgba(255,255,255,1)";
   } else {
-    const colorIndex = Math.floor(lilyClickCount / 15) % lilyColors.length;
-    return lilyColors[colorIndex].shadow;
+    const colorIndex = Math.floor(lilyClickCount / 15) % lilyNeonColors.length;
+    return lilyNeonColors[colorIndex].shadow;
   }
 }
 
@@ -182,8 +194,10 @@ function drawSpiderLily() {
   
   ctx.scale(lilySize, lilySize);
   
-  ctx.strokeStyle = "#3a1818";
+  ctx.strokeStyle = "#4de1ff";
   ctx.lineWidth = 4;
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#4de1ff";
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(0, -120);
@@ -191,14 +205,14 @@ function drawSpiderLily() {
 
   for (let i = 0; i < 40; i++) {
     const angle = (i / 40) * Math.PI * 2;
-    const x = Math.cos(angle) * 50;
-    const y = -120 + Math.sin(angle) * 50;
+    const x = Math.cos(angle) * 55;
+    const y = -120 + Math.sin(angle) * 55;
     ctx.beginPath();
     ctx.moveTo(0, -120);
     ctx.lineTo(x, y);
     ctx.strokeStyle = getCurrentLilyColor(i);
-    ctx.lineWidth = 2;
-    ctx.shadowBlur = 12;
+    ctx.lineWidth = 2.5;
+    ctx.shadowBlur = 16;
     ctx.shadowColor = getCurrentLilyShadow();
     ctx.stroke();
   }
@@ -223,10 +237,6 @@ function celebrate(level = 1) {
   const rows = Math.ceil(window.innerHeight / 50);
   const cols = Math.ceil(window.innerWidth / 80);
   
-  const rainbowColors = [
-    '#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0080ff', '#0000ff', '#8b00ff'
-  ];
-  
   for (let i = 0; i < rows * cols; i++) {
     const span = document.createElement('span');
     span.textContent = faces[Math.floor(Math.random() * faces.length)];
@@ -235,6 +245,9 @@ function celebrate(level = 1) {
     if (level >= 2) {
       span.style.animation = 'rainbowBlink 0.5s infinite';
       span.style.animationDelay = `${Math.random() * 0.5}s`;
+    } else {
+      span.style.color = '#ff7ad9';
+      span.style.textShadow = '0 0 15px #ff7ad9, 0 0 30px #4de1ff';
     }
     
     celebDiv.appendChild(span);
@@ -280,7 +293,7 @@ function handleInteraction(e) {
   const lilyCy = h - 80;
   const lilyDx = mx - lilyCx;
   const lilyDy = my - (lilyCy - 60);
-  if (lilyDx * lilyDx + lilyDy * lilyDy < 3600) {
+  if (lilyDx * lilyDx + lilyDy * lilyDy < 4900) {
     lilyClickCount++;
     playBeep(1000, 0.15);
     return;
@@ -312,14 +325,18 @@ canvas.addEventListener("click", handleInteraction);
 canvas.addEventListener("touchstart", handleInteraction);
 
 function animate() {
-  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "rgba(7, 7, 32, 0.3)";
+  ctx.fillRect(0, 0, w, h);
+
   drawSpiderLily();
+  
   bugs.forEach(s => {
     s.y += s.speed;
     s.x += Math.sin(s.y / 20 + s.phase) * 0.4;
     if (s.y > h) s.y = -10;
+    
     ctx.fillStyle = s.color;
-    ctx.shadowBlur = 6;
+    ctx.shadowBlur = 10;
     ctx.shadowColor = s.color;
     ctx.beginPath();
     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
